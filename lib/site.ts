@@ -31,6 +31,19 @@ export function asset(path: string) {
   return `${BASE_PATH}${path}`;
 }
 
+/**
+ * Prefija una ruta interna y le deja barra final.
+ *
+ * El sitio se exporta con `trailingSlash: true`, así que cada página vive en
+ * `<ruta>/index.html`. Enlazar sin la barra funciona, pero obliga al host a
+ * responder un 301 antes de servir nada.
+ */
+export function href(path: string) {
+  if (path.startsWith('#')) return path;
+  const clean = path.endsWith('/') ? path : `${path}/`;
+  return `${BASE_PATH}${clean}`;
+}
+
 export const business = {
   name: 'PUREVA',
   legalName: 'PUREVA Limpieza Profesional',

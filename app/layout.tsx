@@ -5,11 +5,13 @@ import {
   asset,
   business,
   coverage,
-  faqs,
   reviewData,
   serviceCatalog,
   socialLinks,
 } from '@/lib/site';
+import { SiteFooter } from '@/components/site/footer';
+import { SiteHeader } from '@/components/site/header';
+import { jsonLd } from '@/lib/schema';
 import './globals.css';
 
 const geistSans = Geist({
@@ -232,22 +234,6 @@ const websiteSchema = {
   publisher: { '@id': `${SITE_URL}/#business` },
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  '@id': `${SITE_URL}/#faq`,
-  mainEntity: faqs.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-  })),
-};
-
-/** `<` escapado para que el JSON no pueda cerrar el `<script>` que lo contiene. */
-function jsonLd(schema: object) {
-  return { __html: JSON.stringify(schema).replace(/</g, '\\u003c') };
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -256,18 +242,8 @@ export default function RootLayout({
   return (
     <html lang="es-MX">
       <head>
-        {/* El hero es el LCP: se precarga la variante que realmente usará cada viewport. */}
-        <link
-          rel="preload"
-          as="image"
-          href={asset('/images/cleaning-crew.jpg')}
-          imageSrcSet={`${asset('/images/cleaning-crew-640.jpg')} 640w, ${asset('/images/cleaning-crew.jpg')} 1024w`}
-          imageSizes="100vw"
-          fetchPriority="high"
-        />
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(localBusinessSchema)} />
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(websiteSchema)} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(faqSchema)} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${jakarta.variable} antialiased`}
@@ -275,10 +251,14 @@ export default function RootLayout({
         <noscript>
           <style>{'.reveal{opacity:1!important;transform:none!important}'}</style>
         </noscript>
-        <a href="#inicio" className="skip-link">
+        <a href="#contenido" className="skip-link">
           Saltar al contenido
         </a>
-        {children}
+        <SiteHeader />
+        <main id="contenido" className="min-h-screen overflow-x-clip bg-background text-foreground">
+          {children}
+        </main>
+        <SiteFooter />
       </body>
     </html>
   );

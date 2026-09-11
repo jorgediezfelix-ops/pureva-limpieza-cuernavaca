@@ -25,12 +25,26 @@ const OUT = path.join(ROOT, 'out');
 /** Archivos de dist/client que solo sirven a Cloudflare Workers. */
 const SKIP = new Set(['_headers', '.assetsignore', '.vite', 'vinext-client-entry-manifest.json']);
 
-/** Rutas a capturar: URL servida -> archivo dentro de out/. */
-const ROUTES = [
-  { url: `${BASE_PATH}/`, file: 'index.html' },
-  { url: `${BASE_PATH}/robots.txt`, file: 'robots.txt' },
-  { url: `${BASE_PATH}/sitemap.xml`, file: 'sitemap.xml' },
-];
+/**
+ * Lista de páginas a capturar, leída del propio sitemap del sitio.
+ * Así una ruta nueva solo hay que darla de alta en `app/sitemap.ts`.
+ */
+async function routesFromSitemap(origin) {
+  const res = await fetch(`${origin}${BASE_PATH}/sitemap.xml`);
+  if (!res.ok) throw new Error(`sitemap.xml devolvió ${res.status}`);
+  const xml = await res.text();
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  if (locs.length === 0) throw new Error('El sitemap no contiene ninguna URL');
+
+  return locs.map((loc) => {
+    // De la URL absoluta solo interesa la ruta relativa a BASE_PATH.
+    const path = new URL(loc).pathname.slice(BASE_PATH.length).replace(/^\/|\/$/g, '');
+    return {
+      url: `${BASE_PATH}/${path ? `${path}/` : ''}`,
+      file: path ? `${path}/index.html` : 'index.html',
+    };
+  });
+}
 
 function copyDir(from, to) {
   fs.mkdirSync(to, { recursive: true });
@@ -83,13 +97,22 @@ try {
   }
 
   // 2. HTML y metadatos renderizados por el servidor.
-  for (const route of ROUTES) {
+  const routes = [
+    ...(await routesFromSitemap(origin)),
+    { url: `${BASE_PATH}/robots.txt`, file: 'robots.txt' },
+    { url: `${BASE_PATH}/sitemap.xml`, file: 'sitemap.xml' },
+  ];
+
+  for (const route of routes) {
     const res = await fetch(`${origin}${route.url}`);
     if (!res.ok) throw new Error(`${route.url} devolvió ${res.status}`);
     const body = Buffer.from(await res.arrayBuffer());
-    fs.writeFileSync(path.join(OUT, route.file), body);
-    console.log(`  ${route.file.padEnd(14)} ${String(body.length).padStart(7)} bytes`);
+    const dest = path.join(OUT, route.file);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.writeFileSync(dest, body);
+    console.log(`  ${route.file.padEnd(40)} ${String(body.length).padStart(7)} bytes`);
   }
+  console.log(`\n  ${routes.length} rutas capturadas`);
 
   // 3. Sin esto, Pages pasa la carpeta por Jekyll y descarta todo lo que
   //    empieza por guion bajo, incluido _next.

@@ -26,11 +26,33 @@ npm run lint     # oxlint
 
 | Ruta | Contenido |
 | --- | --- |
-| `app/page.tsx` | Toda la landing (header, hero, cotizador, secciones, footer) |
-| `app/layout.tsx` | Metadata, datos estructurados JSON-LD, iconos, fuentes |
+| `app/layout.tsx` | Cabecera, pie, metadata base y JSON-LD del negocio |
+| `app/page.tsx` | Portada corta: hero con cotizador rápido y accesos |
+| `app/servicios/[slug]/` | Una página por servicio |
+| `app/sectores/[slug]/` | Una página por sector |
+| `app/{empresas,planes,nosotros,cotizar,contacto,preguntas-frecuentes}/` | Páginas fijas |
 | `app/robots.ts`, `app/sitemap.ts` | `robots.txt` y `sitemap.xml` generados |
-| `lib/site.ts` | NAP, cobertura, catálogo de servicios y FAQs (fuente única) |
+| `components/site/` | Cabecera, pie y bloques compartidos entre páginas |
+| `lib/site.ts` | NAP, cobertura, FAQs generales, `BASE_PATH` y `SITE_URL` |
+| `lib/content.ts` | Navegación, servicios, sectores y planes con su texto |
+| `lib/schema.ts` | Datos estructurados por página (migas, `Service`, FAQ) |
 | `public/images/` | Fotos con variantes `-640` y `-1024` para `srcset` |
+
+### Páginas
+
+```
+/                               /empresas
+/servicios                      /planes
+  /servicios/<slug>             /cotizar
+/sectores                       /nosotros
+  /sectores/<slug>              /contacto
+                                /preguntas-frecuentes
+```
+
+Cada página lleva su propio `title`, `description`, canonical y `BreadcrumbList`;
+las de servicio añaden `Service` y sus FAQ. Para dar de alta una página nueva
+basta con añadirla a `app/sitemap.ts`: el script de exportación lee ese sitemap
+para saber qué capturar.
 
 ## SEO
 
@@ -53,11 +75,12 @@ El sitio se publica en GitHub Pages en cada push a `main`
 
 https://kinvitalgroup.com/pureva-limpieza-cuernavaca/
 
-Pages solo sirve archivos estáticos y vinext 1.0.0-beta.5 no expone
-`output: 'export'` en su CLI (marca la home como dinámica y no escribe HTML),
-así que `scripts/export-static.mjs` levanta el servidor de producción, guarda
-la respuesta renderizada y arma `out/`. Como toda la página es un componente de
-cliente, el resultado conserva el cotizador y el resto de la interactividad.
+Pages solo sirve archivos estáticos y el `output: 'export'` de vinext
+1.0.0-beta.5 no sirve aquí: con rutas estáticas no escribe HTML y con rutas
+dinámicas aborta el build (`RSC handler returned 404`). En su lugar,
+`scripts/export-static.mjs` levanta el servidor de producción, recorre las URLs
+del sitemap y guarda cada respuesta renderizada en `out/`. La interactividad
+—cotizador, menú, acordeones— se conserva porque hidrata con normalidad.
 
 Al publicarse en un subdirectorio, las rutas absolutas escritas a mano se
 prefijan con `BASE_PATH` (`lib/site.ts`) mediante `asset()`. Con dominio propio
