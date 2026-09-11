@@ -55,7 +55,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { business, coverage, faqs, socialLinks } from '@/lib/site';
+import { asset, business, coverage, faqs, socialLinks } from '@/lib/site';
 
 const navItems = [
   { label: 'Servicios', href: '#servicios' },
@@ -357,14 +357,16 @@ function Photo({
   const meta = photoMeta[src];
   const srcSet = meta
     ? [
-        ...meta.sources.map((source) => `${src.replace('.jpg', `${source.suffix}.jpg`)} ${source.width}w`),
-        `${src} ${meta.width}w`,
+        ...meta.sources.map(
+          (source) => `${asset(src.replace('.jpg', `${source.suffix}.jpg`))} ${source.width}w`,
+        ),
+        `${asset(src)} ${meta.width}w`,
       ].join(', ')
     : undefined;
 
   return (
     <img
-      src={src}
+      src={asset(src)}
       srcSet={srcSet}
       sizes={sizes}
       width={meta?.width}
@@ -384,7 +386,7 @@ function Brand({ inverted = false }: { inverted?: boolean }) {
       {/* Isotipo de la marca. El alt va vacío: el nombre accesible lo aporta el
           texto contiguo, así los lectores de pantalla no lo anuncian dos veces. */}
       <img
-        src="/logo-mark.png"
+        src={asset('/logo-mark.png')}
         alt=""
         width={256}
         height={256}

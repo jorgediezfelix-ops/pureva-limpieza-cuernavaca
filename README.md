@@ -18,6 +18,7 @@ npm install
 npm run dev      # servidor de desarrollo
 npm run build    # build de producción
 npm run start    # sirve el build con wrangler
+npm run export   # build + sitio estático en out/ (GitHub Pages)
 npm run lint     # oxlint
 ```
 
@@ -44,3 +45,21 @@ Open Graph, `robots.txt` y `sitemap.xml` se derivan de ahí.
 `reviewData.enabled` está en `false` a propósito: el bloque `aggregateRating`
 solo debe publicarse cuando existan reseñas reales y verificables, porque Google
 aplica acciones manuales a las valoraciones inventadas.
+
+## Publicación
+
+El sitio se publica en GitHub Pages en cada push a `main`
+(`.github/workflows/deploy.yml`):
+
+https://jorgediezfelix-ops.github.io/pureva-limpieza-cuernavaca/
+
+Pages solo sirve archivos estáticos y vinext 1.0.0-beta.5 no expone
+`output: 'export'` en su CLI (marca la home como dinámica y no escribe HTML),
+así que `scripts/export-static.mjs` levanta el servidor de producción, guarda
+la respuesta renderizada y arma `out/`. Como toda la página es un componente de
+cliente, el resultado conserva el cotizador y el resto de la interactividad.
+
+Al publicarse en un subdirectorio, las rutas absolutas escritas a mano se
+prefijan con `BASE_PATH` (`lib/site.ts`) mediante `asset()`. Con dominio propio
+se deja `BASE_PATH` vacío, se actualiza `SITE_URL` y se configura el dominio
+en los ajustes de Pages.

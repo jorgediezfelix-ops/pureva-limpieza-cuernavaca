@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import {
   SITE_URL,
+  asset,
   business,
   coverage,
   faqs,
@@ -79,7 +80,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/og.jpg',
+        url: asset('/og.jpg'),
         width: 1200,
         height: 628,
         alt: 'PUREVA — Limpieza profesional en Cuernavaca',
@@ -91,16 +92,16 @@ export const metadata: Metadata = {
     title: 'Empresa de limpieza en Cuernavaca | PUREVA',
     description:
       'Limpieza profesional para hogares y empresas en Cuernavaca. Cotiza en línea en menos de 2 minutos.',
-    images: ['/og.jpg'],
+    images: [asset('/og.jpg')],
   },
   icons: {
     icon: [
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: asset('/icon-192.png'), sizes: '192x192', type: 'image/png' },
+      { url: asset('/icon-512.png'), sizes: '512x512', type: 'image/png' },
     ],
-    shortcut: '/icon-192.png',
+    shortcut: asset('/icon-192.png'),
     // iOS no admite SVG como icono de pantalla de inicio: necesita un PNG opaco.
-    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    apple: [{ url: asset('/apple-touch-icon.png'), sizes: '180x180', type: 'image/png' }],
   },
   formatDetection: {
     telephone: true,
@@ -257,8 +258,8 @@ export default function RootLayout({
         <link
           rel="preload"
           as="image"
-          href="/images/cleaning-crew.jpg"
-          imageSrcSet="/images/cleaning-crew-640.jpg 640w, /images/cleaning-crew.jpg 1024w"
+          href={asset('/images/cleaning-crew.jpg')}
+          imageSrcSet={`${asset('/images/cleaning-crew-640.jpg')} 640w, ${asset('/images/cleaning-crew.jpg')} 1024w`}
           imageSizes="100vw"
           fetchPriority="high"
         />

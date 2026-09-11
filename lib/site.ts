@@ -9,10 +9,23 @@
  */
 
 /**
+ * Subdirectorio bajo el que se sirve el sitio. GitHub Pages publica los
+ * repositorios de proyecto en `https://<usuario>.github.io/<repo>/`, así que
+ * todas las rutas absolutas que escribimos a mano necesitan este prefijo.
+ * Con dominio propio se deja como cadena vacía.
+ */
+export const BASE_PATH = '/pureva-limpieza-cuernavaca';
+
+/**
  * Dominio de producción. Cambiar aquí actualiza canonical, Open Graph,
  * robots.txt y sitemap.xml de una sola vez.
  */
-export const SITE_URL = 'https://pureva.mx';
+export const SITE_URL = `https://jorgediezfelix-ops.github.io${BASE_PATH}`;
+
+/** Prefija una ruta de `public/` con el subdirectorio de publicación. */
+export function asset(path: string) {
+  return `${BASE_PATH}${path}`;
+}
 
 export const business = {
   name: 'PUREVA',

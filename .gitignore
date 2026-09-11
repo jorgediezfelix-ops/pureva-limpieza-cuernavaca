@@ -38,3 +38,6 @@ next-env.d.ts
 /work/
 tsconfig.tsbuildinfo
 .claude/
+
+# static export para GitHub Pages
+/out/
