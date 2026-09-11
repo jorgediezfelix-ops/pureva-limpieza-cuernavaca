@@ -70,6 +70,8 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  // Nota: las imágenes de openGraph/twitter se resuelven contra `metadataBase`,
+  // que ya lleva BASE_PATH; por eso van sin `asset()`, a diferencia de `icons`.
   openGraph: {
     title: 'Empresa de limpieza en Cuernavaca | PUREVA Limpieza Profesional',
     description:
@@ -80,7 +82,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: asset('/og.jpg'),
+        url: '/og.jpg',
         width: 1200,
         height: 628,
         alt: 'PUREVA — Limpieza profesional en Cuernavaca',
@@ -92,7 +94,7 @@ export const metadata: Metadata = {
     title: 'Empresa de limpieza en Cuernavaca | PUREVA',
     description:
       'Limpieza profesional para hogares y empresas en Cuernavaca. Cotiza en línea en menos de 2 minutos.',
-    images: [asset('/og.jpg')],
+    images: ['/og.jpg'],
   },
   icons: {
     icon: [
