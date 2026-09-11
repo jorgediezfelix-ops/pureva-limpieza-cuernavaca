@@ -8,8 +8,11 @@
  * justo lo que Google penaliza.
  */
 
-/** Dominio de producción. Cambiar aquí actualiza canonical, OG y sitemap. */
-export const SITE_URL = 'https://pureva-limpieza-cuernavaca.jediez.chatgpt.site';
+/**
+ * Dominio de producción. Cambiar aquí actualiza canonical, Open Graph,
+ * robots.txt y sitemap.xml de una sola vez.
+ */
+export const SITE_URL = 'https://pureva.mx';
 
 export const business = {
   name: 'PUREVA',
