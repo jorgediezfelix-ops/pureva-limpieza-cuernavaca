@@ -19,8 +19,12 @@ export const BASE_PATH = '/pureva-limpieza-cuernavaca';
 /**
  * Dominio de producción. Cambiar aquí actualiza canonical, Open Graph,
  * robots.txt y sitemap.xml de una sola vez.
+ *
+ * La cuenta tiene kinvitalgroup.com como dominio propio de GitHub Pages, así
+ * que `jorgediezfelix-ops.github.io` redirige (301) aquí: el canonical debe
+ * apuntar al destino final, nunca al origen de una redirección.
  */
-export const SITE_URL = `https://jorgediezfelix-ops.github.io${BASE_PATH}`;
+export const SITE_URL = `https://kinvitalgroup.com${BASE_PATH}`;
 
 /** Prefija una ruta de `public/` con el subdirectorio de publicación. */
 export function asset(path: string) {

@@ -51,7 +51,7 @@ aplica acciones manuales a las valoraciones inventadas.
 El sitio se publica en GitHub Pages en cada push a `main`
 (`.github/workflows/deploy.yml`):
 
-https://jorgediezfelix-ops.github.io/pureva-limpieza-cuernavaca/
+https://kinvitalgroup.com/pureva-limpieza-cuernavaca/
 
 Pages solo sirve archivos estáticos y vinext 1.0.0-beta.5 no expone
 `output: 'export'` en su CLI (marca la home como dinámica y no escribe HTML),
